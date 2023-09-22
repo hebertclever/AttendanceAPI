@@ -8,59 +8,47 @@ use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Attendance::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'student_id' => 'required',
+            'course_id' => 'required',
+            'status' => 'required|in:A,T,F',
+            'date' => 'required|date',
+        ]);
+
+        $attendance = Attendance::create($request->all());
+
+        return response()->json($attendance, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Attendance $attendance)
     {
-        //
+        return response()->json($attendance);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Attendance $attendance)
     {
-        //
+        $this->validate($request, [
+            'student_id' => 'required',
+            'course_id' => 'required',
+            'status' => 'required|in:A,T,F',
+            'date' => 'required|date',
+        ]);
+
+        $attendance->update($request->all());
+
+        return response()->json($attendance);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Attendance $attendance)
     {
-        //
+        $attendance->delete();
+        return response()->json(null, 204);
     }
 }
